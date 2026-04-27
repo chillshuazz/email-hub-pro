@@ -14,16 +14,318 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      campaign_sends: {
+        Row: {
+          campaign_id: string
+          created_at: string
+          email: string
+          error: string | null
+          id: string
+          sent_at: string | null
+          status: Database["public"]["Enums"]["send_status"]
+          user_id: string
+        }
+        Insert: {
+          campaign_id: string
+          created_at?: string
+          email: string
+          error?: string | null
+          id?: string
+          sent_at?: string | null
+          status?: Database["public"]["Enums"]["send_status"]
+          user_id: string
+        }
+        Update: {
+          campaign_id?: string
+          created_at?: string
+          email?: string
+          error?: string | null
+          id?: string
+          sent_at?: string | null
+          status?: Database["public"]["Enums"]["send_status"]
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "campaign_sends_campaign_id_fkey"
+            columns: ["campaign_id"]
+            isOneToOne: false
+            referencedRelation: "campaigns"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      campaigns: {
+        Row: {
+          body: string
+          created_at: string
+          failed_count: number
+          finished_at: string | null
+          id: string
+          is_html: boolean
+          list_id: string
+          name: string
+          rate_per_minute: number
+          sent_count: number
+          smtp_id: string
+          started_at: string | null
+          status: Database["public"]["Enums"]["campaign_status"]
+          subject: string
+          total_recipients: number
+          user_id: string
+        }
+        Insert: {
+          body: string
+          created_at?: string
+          failed_count?: number
+          finished_at?: string | null
+          id?: string
+          is_html?: boolean
+          list_id: string
+          name: string
+          rate_per_minute?: number
+          sent_count?: number
+          smtp_id: string
+          started_at?: string | null
+          status?: Database["public"]["Enums"]["campaign_status"]
+          subject: string
+          total_recipients?: number
+          user_id: string
+        }
+        Update: {
+          body?: string
+          created_at?: string
+          failed_count?: number
+          finished_at?: string | null
+          id?: string
+          is_html?: boolean
+          list_id?: string
+          name?: string
+          rate_per_minute?: number
+          sent_count?: number
+          smtp_id?: string
+          started_at?: string | null
+          status?: Database["public"]["Enums"]["campaign_status"]
+          subject?: string
+          total_recipients?: number
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "campaigns_list_id_fkey"
+            columns: ["list_id"]
+            isOneToOne: false
+            referencedRelation: "contact_lists"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "campaigns_smtp_id_fkey"
+            columns: ["smtp_id"]
+            isOneToOne: false
+            referencedRelation: "smtp_accounts"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      contact_lists: {
+        Row: {
+          created_at: string
+          id: string
+          name: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          name: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          name?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      contacts: {
+        Row: {
+          created_at: string
+          email: string
+          extra: Json | null
+          id: string
+          list_id: string
+          name: string | null
+          phone: string | null
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          email: string
+          extra?: Json | null
+          id?: string
+          list_id: string
+          name?: string | null
+          phone?: string | null
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          email?: string
+          extra?: Json | null
+          id?: string
+          list_id?: string
+          name?: string | null
+          phone?: string | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "contacts_list_id_fkey"
+            columns: ["list_id"]
+            isOneToOne: false
+            referencedRelation: "contact_lists"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      smtp_accounts: {
+        Row: {
+          created_at: string
+          from_email: string
+          from_name: string | null
+          host: string
+          id: string
+          label: string
+          last_checked: string | null
+          last_error: string | null
+          password: string
+          port: number
+          secure: boolean
+          status: Database["public"]["Enums"]["smtp_status"]
+          updated_at: string
+          user_id: string
+          username: string
+        }
+        Insert: {
+          created_at?: string
+          from_email: string
+          from_name?: string | null
+          host: string
+          id?: string
+          label: string
+          last_checked?: string | null
+          last_error?: string | null
+          password: string
+          port: number
+          secure?: boolean
+          status?: Database["public"]["Enums"]["smtp_status"]
+          updated_at?: string
+          user_id: string
+          username: string
+        }
+        Update: {
+          created_at?: string
+          from_email?: string
+          from_name?: string | null
+          host?: string
+          id?: string
+          label?: string
+          last_checked?: string | null
+          last_error?: string | null
+          password?: string
+          port?: number
+          secure?: boolean
+          status?: Database["public"]["Enums"]["smtp_status"]
+          updated_at?: string
+          user_id?: string
+          username?: string
+        }
+        Relationships: []
+      }
+      smtp_detect_jobs: {
+        Row: {
+          created_at: string
+          email: string
+          id: string
+          result: Json | null
+          smtp_account_id: string | null
+          status: string
+          steps: Json
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          email: string
+          id?: string
+          result?: Json | null
+          smtp_account_id?: string | null
+          status?: string
+          steps?: Json
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          email?: string
+          id?: string
+          result?: Json | null
+          smtp_account_id?: string | null
+          status?: string
+          steps?: Json
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "smtp_detect_jobs_smtp_account_id_fkey"
+            columns: ["smtp_account_id"]
+            isOneToOne: false
+            referencedRelation: "smtp_accounts"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      user_roles: {
+        Row: {
+          created_at: string
+          id: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          role?: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          role?: Database["public"]["Enums"]["app_role"]
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      has_role: {
+        Args: {
+          _role: Database["public"]["Enums"]["app_role"]
+          _user_id: string
+        }
+        Returns: boolean
+      }
     }
     Enums: {
-      [_ in never]: never
+      app_role: "admin" | "user"
+      campaign_status: "draft" | "sending" | "sent" | "failed"
+      send_status: "pending" | "sent" | "failed"
+      smtp_status: "unknown" | "checking" | "ok" | "error"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -150,6 +452,11 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      app_role: ["admin", "user"],
+      campaign_status: ["draft", "sending", "sent", "failed"],
+      send_status: ["pending", "sent", "failed"],
+      smtp_status: ["unknown", "checking", "ok", "error"],
+    },
   },
 } as const
