@@ -9,19 +9,14 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
-import { Route as SourcesRouteImport } from './routes/sources'
 import { Route as SmtpsRouteImport } from './routes/smtps'
 import { Route as ListsRouteImport } from './routes/lists'
+import { Route as DetectRouteImport } from './routes/detect'
 import { Route as CampaignsRouteImport } from './routes/campaigns'
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as ApiPublicVerifySmtpsRouteImport } from './routes/api.public.verify-smtps'
 
-const SourcesRoute = SourcesRouteImport.update({
-  id: '/sources',
-  path: '/sources',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const SmtpsRoute = SmtpsRouteImport.update({
   id: '/smtps',
   path: '/smtps',
@@ -30,6 +25,11 @@ const SmtpsRoute = SmtpsRouteImport.update({
 const ListsRoute = ListsRouteImport.update({
   id: '/lists',
   path: '/lists',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const DetectRoute = DetectRouteImport.update({
+  id: '/detect',
+  path: '/detect',
   getParentRoute: () => rootRouteImport,
 } as any)
 const CampaignsRoute = CampaignsRouteImport.update({
@@ -57,18 +57,18 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
   '/campaigns': typeof CampaignsRoute
+  '/detect': typeof DetectRoute
   '/lists': typeof ListsRoute
   '/smtps': typeof SmtpsRoute
-  '/sources': typeof SourcesRoute
   '/api/public/verify-smtps': typeof ApiPublicVerifySmtpsRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
   '/campaigns': typeof CampaignsRoute
+  '/detect': typeof DetectRoute
   '/lists': typeof ListsRoute
   '/smtps': typeof SmtpsRoute
-  '/sources': typeof SourcesRoute
   '/api/public/verify-smtps': typeof ApiPublicVerifySmtpsRoute
 }
 export interface FileRoutesById {
@@ -76,9 +76,9 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
   '/campaigns': typeof CampaignsRoute
+  '/detect': typeof DetectRoute
   '/lists': typeof ListsRoute
   '/smtps': typeof SmtpsRoute
-  '/sources': typeof SourcesRoute
   '/api/public/verify-smtps': typeof ApiPublicVerifySmtpsRoute
 }
 export interface FileRouteTypes {
@@ -87,27 +87,27 @@ export interface FileRouteTypes {
     | '/'
     | '/auth'
     | '/campaigns'
+    | '/detect'
     | '/lists'
     | '/smtps'
-    | '/sources'
     | '/api/public/verify-smtps'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
     | '/auth'
     | '/campaigns'
+    | '/detect'
     | '/lists'
     | '/smtps'
-    | '/sources'
     | '/api/public/verify-smtps'
   id:
     | '__root__'
     | '/'
     | '/auth'
     | '/campaigns'
+    | '/detect'
     | '/lists'
     | '/smtps'
-    | '/sources'
     | '/api/public/verify-smtps'
   fileRoutesById: FileRoutesById
 }
@@ -115,21 +115,14 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AuthRoute: typeof AuthRoute
   CampaignsRoute: typeof CampaignsRoute
+  DetectRoute: typeof DetectRoute
   ListsRoute: typeof ListsRoute
   SmtpsRoute: typeof SmtpsRoute
-  SourcesRoute: typeof SourcesRoute
   ApiPublicVerifySmtpsRoute: typeof ApiPublicVerifySmtpsRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/sources': {
-      id: '/sources'
-      path: '/sources'
-      fullPath: '/sources'
-      preLoaderRoute: typeof SourcesRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/smtps': {
       id: '/smtps'
       path: '/smtps'
@@ -142,6 +135,13 @@ declare module '@tanstack/react-router' {
       path: '/lists'
       fullPath: '/lists'
       preLoaderRoute: typeof ListsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/detect': {
+      id: '/detect'
+      path: '/detect'
+      fullPath: '/detect'
+      preLoaderRoute: typeof DetectRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/campaigns': {
@@ -179,11 +179,20 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AuthRoute: AuthRoute,
   CampaignsRoute: CampaignsRoute,
+  DetectRoute: DetectRoute,
   ListsRoute: ListsRoute,
   SmtpsRoute: SmtpsRoute,
-  SourcesRoute: SourcesRoute,
   ApiPublicVerifySmtpsRoute: ApiPublicVerifySmtpsRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { createStart } from '@tanstack/react-start'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+  }
+}
